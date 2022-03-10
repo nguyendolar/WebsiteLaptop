@@ -1,0 +1,1 @@
+!function () { if ($("#goToCart").length) { var t = Cookie.countProduct(); t > 0 && $(".lblCartCount").text(t) } }();
