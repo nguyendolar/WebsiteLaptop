@@ -75,7 +75,7 @@ namespace DoAn_LapTrinhWeb.Controllers
                 if (!String.IsNullOrEmpty(returnUrl))
                     return Redirect(returnUrl);
                 else
-                    return RedirectToAction("Index", "Home");
+                    return Redirect("/home");
             }
             Notification.setNotification3s("Email, mật khẩu không đúng, hoặc tài khoản bị vô hiệu hóa", "error");
             return View(model);
@@ -92,7 +92,7 @@ namespace DoAn_LapTrinhWeb.Controllers
             if (!String.IsNullOrEmpty(returnUrl))
                 return Redirect(returnUrl);
             else
-                return RedirectToAction("Index", "Home");
+                return Redirect("/home");
         }
         //View đăng ký
         public ActionResult Register()

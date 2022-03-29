@@ -52,7 +52,6 @@
                                         <tr>
                                             <th>Đơn Hàng</th>
                                             <th>Ngày đặt</th>
-                                            <th>Trạng thái</th>
                                             <th>Số lượng đặt</th>
                                             <th>Tổng Tiền</th>
                                             <th>Hành động</th>
@@ -64,7 +63,6 @@
                                             <tr>
                                                 <td>#@item.order_id</td>
                                                 <td>@item.oder_date.ToString("HH:mm dd-MM-yyyy")</td>
-                                                <td>@(item.status == "1" ? "Chờ xử lý": item.status == "2"? "Đang xử lý" : item.status == "3" ? "Hoàn thành": "Bị hủy")</td>
                                                 <td>@item.Oder_Detail.Sum(m => m.quantity)</td>
                                                 <td>@item.total.ToString("#,0₫", culture.NumberFormat)</td>
                                                 <td>

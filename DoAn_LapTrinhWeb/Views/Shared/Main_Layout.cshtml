@@ -20,7 +20,20 @@
     <!-- Font Awesome CDN -->
     <script src="https://use.fontawesome.com/576ffb49bd.js"></script>
 </head>
-<body>
+<body onload=onReady()>
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function () {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/6242e79e2abe5b455fc226a3/1fvalhho4';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
     @Html.Partial("Header_Layout")
     <!--  Start Offcanvas Mobile Menu Section -->
     <div id="mobile-menu-offcanvas"
@@ -88,7 +101,7 @@
                     </li>
                 </ul>
                 <ul class="user-link">
-                    <li><a >Giỏ Hàng</a></li>
+                    <li><a>Giỏ Hàng</a></li>
                     <li><a>Thanh Toán</a></li>
                 </ul>
             </div>
@@ -324,6 +337,7 @@
     <script src="~/Scripts/UserJS/plugins/plugins.min.js"></script>
     <script src="~/Scripts/UserJS/cookie.js"></script>
     <script src="~/Scripts/UserJS/common.js"></script>
+    <script src="~/Scripts/UserJS/qrcode.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Latest compiled JavaScript -->
     <!-- Main JS -->

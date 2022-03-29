@@ -2316,6 +2316,7 @@
     <Content Include="Scripts\UserJS\plugins\plugins.min.js" />
     <Content Include="Scripts\UserJS\plugins\swiper-bundle.min.js" />
     <Content Include="Scripts\UserJS\plugins\venobox.min.js" />
+    <Content Include="Scripts\UserJS\qrcode.min.js" />
     <Content Include="Scripts\UserJS\simditor\dompurify.js" />
     <Content Include="Scripts\UserJS\simditor\hotkeys.js" />
     <Content Include="Scripts\UserJS\simditor\mobilecheck.js" />

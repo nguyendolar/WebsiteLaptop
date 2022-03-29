@@ -131,7 +131,28 @@
                             <p>Thành tiền</p>
                             <p style="font-size: 20px; color: rgb(235, 33, 1);" class="cart_amount">@order.total.ToString("#,0₫", culture.NumberFormat)</p>
                         </div>
-                        <div class="cart_subtotal">
+                        <div class="cart_subtotal ">
+                            <p>Tình trạng đơn hàng</p>
+                            <div id="id_qrcode"></div>
+                            @if (order.status == "1")
+                            {
+                                <input id="textqr" type="hidden" value="Dang xu ly" />
+                            }
+                            else if (order.status == "2")
+                            {
+                                <input id="textqr" type="hidden" value="Dang giao hang" />
+                            }
+                            else if (order.status == "3")
+                            {
+                                <input id="textqr" type="hidden" value="Da giao hang" />
+                            }
+                            else
+                            {
+                                <input id="textqr" type="hidden" value="Da huy" />
+                            }
+                            @*<p style="font-size:16px;" class="cart_amount">@(order.status == "1" ? "Chờ xử lý": order.status == "2"? "Đang xử lý" : order.status == "3" ? "Hoàn thành": "Bị hủy")</p>*@
+                        </div>
+                        <div class="cart_subtotal mt-3">
                             @if (order.IsPayment)
                             {
                                 <p style="color:forestgreen">Đã thanh toán</p>
@@ -149,4 +170,17 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function onReady() {
+        var elText = document.getElementById("textqr").value;
+        var qrcode = new QRCode("id_qrcode", {
+            text: elText.toString(),
+            width: 150,
+            height: 150,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    }
+</script>
 <!-- ...:::: End Account Dashboard Section:::... -->

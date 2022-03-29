@@ -121,9 +121,9 @@
                                         <td>@item.OrderAddress.orderPhonenumber</td>
                                         <td>
                                             <div class="d-flex gap-2">
-                                                <a class="btn @(item.status == "1"? "btn-warning" :"btn-light-warning")" id="waiting_btn_@item.order_id">Chờ xử lý</a>
-                                                <a onclick="onProcessOpen(@item.order_id)" id="on_process_btn_@item.order_id" class="btn @(item.status == "2"? "btn-info" :"btn-light-info")">Đang xử lý</a>
-                                                <a @(item.status == "3" ? "" : "btn-light-success") onclick="CompletedOpen(@item.order_id) " id="comlpleted_btn_@item.order_id" class="btn @(item.status == "3"? "btn-success" :"btn-light-success")">Hoàn thành</a>
+                                                <a class="btn @(item.status == "1"? "btn-warning" :"btn-light-warning")" id="waiting_btn_@item.order_id">Đang xử lý</a>
+                                                <a onclick="onProcessOpen(@item.order_id)" id="on_process_btn_@item.order_id" class="btn @(item.status == "2"? "btn-info" :"btn-light-info")">Đang giao hàng</a>
+                                                <a @(item.status == "3" ? "" : "btn-light-success") onclick="CompletedOpen(@item.order_id) " id="comlpleted_btn_@item.order_id" class="btn @(item.status == "3"? "btn-success" :"btn-light-success")">Đã giao hàng</a>
                                             </div>
                                         </td>
                                         <td>@item.total.ToString("#,0₫", culture.NumberFormat)</td>

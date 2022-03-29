@@ -11,22 +11,22 @@ $('.dimis-modal').click(function () {
 //1. Thay đổi trạng thái sang đang xử lý
 var onProcessOpen = function (id) {
     UpdateModal.find('#update__id').text(id);
-    UpdateModal.find('#update__status').text('Đang xử lý');
+    UpdateModal.find('#update__status').text('Đang giao hàng');
     UpdateModal.find('#icon').html('<i class="bi bi-cart-plus text-info" style="font-size:6rem"></i>');
     UpdateModal.modal('show');
     orderId = id;
     OrderStatus = '2';
-    statusName = 'Đang xử lý';
+    statusName = 'Đang giao hàng';
 }
 //2. Thay đổi trạng thái sang hoàn thành
 var CompletedOpen = function (id) {
     UpdateModal.find('#update__id').text(id);
     UpdateModal.find('#icon').html('<i class="bi bi-cart-check text-success" style="font-size:6rem"></i>');
-    UpdateModal.find('#update__status').text('Hoàn thành');
+    UpdateModal.find('#update__status').text('Đã giao hàng');
     UpdateModal.modal('show');
     orderId = id;
     OrderStatus = '3';
-    statusName = 'Hoàn thành';
+    statusName = 'Đã giao hàng';
 }
 
 $('#update__submit').click(function () {
