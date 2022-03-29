@@ -61,29 +61,41 @@ namespace DoAn_LapTrinhWeb.Controllers
         public JsonResult ProductComment(Feedback comment, int productID, int discountID, int genreID, int rateStar, string commentContent)
         {
             bool result = false;
-            int userID = User.Identity.GetUserId();
-            if (User.Identity.IsAuthenticated) { 
-                comment.account_id = userID;
-                comment.rate_star = rateStar;
-                comment.product_id = productID;
-                comment.disscount_id = discountID;
-                comment.genre_id = genreID;
-                comment.content = commentContent;
-                comment.stastus = "2";
-                comment.create_at = DateTime.Now;
-                comment.update_at = DateTime.Now;
-                comment.create_by = userID.ToString();
-                comment.update_by = userID.ToString();
-                db.Feedbacks.Add(comment);
-                db.SaveChanges();
+           
+            if(!User.Identity.IsAuthenticated)
+            {
+                Notification.setNotification3s("Bạn cần phải đăng nhập", "error");
                 result = true;
-                Notification.setNotification3s("Bình luận thành công", "success");
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json(result, JsonRequestBehavior.AllowGet);
+                int userID = User.Identity.GetUserId();
+                if (User.Identity.IsAuthenticated)
+                {
+                    comment.account_id = userID;
+                    comment.rate_star = rateStar;
+                    comment.product_id = productID;
+                    comment.disscount_id = discountID;
+                    comment.genre_id = genreID;
+                    comment.content = commentContent;
+                    comment.stastus = "2";
+                    comment.create_at = DateTime.Now;
+                    comment.update_at = DateTime.Now;
+                    comment.create_by = userID.ToString();
+                    comment.update_by = userID.ToString();
+                    db.Feedbacks.Add(comment);
+                    db.SaveChanges();
+                    result = true;
+                    Notification.setNotification3s("Bình luận thành công", "success");
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
             }
+           
         }
         //Phản hồi bình luận/đánh giá
         [HttpPost]

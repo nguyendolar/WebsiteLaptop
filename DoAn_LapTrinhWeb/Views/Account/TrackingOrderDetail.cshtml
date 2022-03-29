@@ -131,6 +131,18 @@
                             <p>Thành tiền</p>
                             <p style="font-size: 20px; color: rgb(235, 33, 1);" class="cart_amount">@order.total.ToString("#,0₫", culture.NumberFormat)</p>
                         </div>
+                        <div class="cart_subtotal">
+                            @if (order.IsPayment)
+                            {
+                                <p style="color:forestgreen">Đã thanh toán</p>
+                            }
+                            else
+                            {
+                                <p>Thành toán khi nhận hàng</p>
+                            }
+
+
+                        </div>
                     </div>
                 </div>
             </div>

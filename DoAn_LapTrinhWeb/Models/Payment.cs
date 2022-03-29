@@ -29,6 +29,8 @@ namespace DoAn_LapTrinhWeb.Model
 
         public DateTime? update_at { get; set; }
 
+        public bool IsPayment { get; set; }
+
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
     }

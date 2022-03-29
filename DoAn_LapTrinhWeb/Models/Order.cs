@@ -35,6 +35,7 @@ namespace DoAn_LapTrinhWeb.Model
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Oder_Detail> Oder_Detail { get; set; }
         public virtual Payment Payment { get; set; }
+        public bool IsPayment { get; set; }
         public virtual OrderAddress OrderAddress { get; set; }
     }
 }

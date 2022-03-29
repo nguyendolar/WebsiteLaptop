@@ -106,6 +106,11 @@ namespace DoAn_LapTrinhWeb
               url: "reset_password",
               defaults: new { controller = "Account", action = "ResetPassword", id = UrlParameter.Optional }
            );
+            routes.MapRoute(
+            name: "heheh",
+            url: "home",
+            defaults: new { controller = "Account", action = "Home", id = UrlParameter.Optional }
+         );
             //gửi yêu cầu hồ trợ
             routes.MapRoute(
               name: "sent request",

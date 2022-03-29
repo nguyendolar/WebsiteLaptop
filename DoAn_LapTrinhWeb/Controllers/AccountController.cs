@@ -2,7 +2,10 @@
 using DoAn_LapTrinhWeb.Common.Helpers;
 using DoAn_LapTrinhWeb.Model;
 using DoAn_LapTrinhWeb.Models;
+using MoMo.MoMoSecurity;
+using MoMo.PaymentRequest;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PagedList;
 using System;
 using System.Collections.Generic;
@@ -38,6 +41,18 @@ namespace DoAn_LapTrinhWeb.Controllers
             }
             return View();
         }
+
+        public ActionResult Home()
+        {
+            ViewBag.AvgFeedback = db.Feedbacks.ToList();
+            ViewBag.HotProduct = db.Products.Where(item => item.status == "1" && item.quantity != "0").OrderByDescending(item => item.buyturn + item.view).Take(8).ToList();
+            ViewBag.NewProduct = db.Products.Where(item => item.status == "1" && item.quantity != "0").OrderByDescending(item => item.create_at).Take(8).ToList();
+            ViewBag.Laptop = db.Products.Where(item => item.status == "1" && item.type == 1 && item.quantity != "0").OrderByDescending(item => item.buyturn + item.view).Take(8).ToList();
+            ViewBag.Accessory = db.Products.Where(item => item.status == "1" && item.type == 2 && item.quantity != "0").OrderByDescending(item => item.buyturn + item.view).Take(8).ToList();
+            ViewBag.OrderDetail = db.Oder_Detail.ToList();
+            return View();
+        }
+
         //Code xử lý đăng nhập
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -453,6 +468,71 @@ namespace DoAn_LapTrinhWeb.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
+
+        public ActionResult PaymentMoMo(int id)
+        {
+            var obj = db.Orders.Where(x => x.order_id == id).FirstOrDefault();
+            var listObjDetail = db.Oder_Detail.Where(x => x.order_id == id).ToList();
+            double total = 0;
+            foreach (var item in listObjDetail)
+            {
+                total += item.quantity * item.price + 30000;
+            }
+            //request params need to request to MoMo system
+            string endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
+            string partnerCode = "MOMOOJOI20210710";
+            string accessKey = "iPXneGmrJH0G8FOP";
+            string serectkey = "sFcbSGRSJjwGxwhhcEktCHWYUuTuPNDB";
+            string orderInfo = "Thanh toán cho đơn hàng tại web";
+            string returnUrl = "https://localhost:44336/list_order";
+            string notifyurl = "http://ba1adf48beba.ngrok.io/Home/SavePayment"; //lưu ý: notifyurl không được sử dụng localhost, có thể sử dụng ngrok để public localhost trong quá trình test
+
+            string amount = total.ToString();
+            string orderid = DateTime.Now.Ticks.ToString();
+            string requestId = DateTime.Now.Ticks.ToString();
+            string extraData = "";
+
+            //Before sign HMAC SHA256 signature
+            string rawHash = "partnerCode=" +
+                partnerCode + "&accessKey=" +
+                accessKey + "&requestId=" +
+                requestId + "&amount=" +
+                amount + "&orderId=" +
+                orderid + "&orderInfo=" +
+                orderInfo + "&returnUrl=" +
+                returnUrl + "&notifyUrl=" +
+                notifyurl + "&extraData=" +
+                extraData;
+
+            MoMoSecurity crypto = new MoMoSecurity();
+            //sign signature SHA256
+            string signature = crypto.signSHA256(rawHash, serectkey);
+
+            //build body json request
+            JObject message = new JObject
+            {
+                { "partnerCode", partnerCode },
+                { "accessKey", accessKey },
+                { "requestId", requestId },
+                { "amount", amount },
+                { "orderId", orderid },
+                { "orderInfo", orderInfo },
+                { "returnUrl", returnUrl },
+                { "notifyUrl", notifyurl },
+                { "extraData", extraData },
+                { "requestType", "captureMoMoWallet" },
+                { "signature", signature }
+
+            };
+
+            string responseFromMomo = PaymentRequest.sendPaymentRequest(endpoint, message.ToString());
+            Session.Add("idPayment", obj);
+            JObject jmessage = JObject.Parse(responseFromMomo);
+            obj.IsPayment = true;
+            db.SaveChanges();
+            return Redirect(jmessage.GetValue("payUrl").ToString());
+        }
+
         //Chi tiết đơn hàng đã mua
         public ActionResult TrackingOrderDetail(int id)
         {
