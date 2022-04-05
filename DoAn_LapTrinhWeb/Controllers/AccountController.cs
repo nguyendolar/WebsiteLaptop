@@ -15,6 +15,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Mail;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -37,7 +38,7 @@ namespace DoAn_LapTrinhWeb.Controllers
             }
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return Redirect("/home"); 
             }
             return View();
         }
@@ -59,26 +60,34 @@ namespace DoAn_LapTrinhWeb.Controllers
         public ActionResult Login(LoginViewModels model,string returnUrl)
         {
             model.Password = Crypto.Hash(model.Password);
-            Account account = db.Accounts.FirstOrDefault(m => m.Email == model.Email && m.password == model.Password && m.status == "1");
-            if (account != null)
+            if (IsValidRecaptcha(Request["g-recaptcha-response"]))
             {
-                LoggedUserData userData = new LoggedUserData
+                Account account = db.Accounts.FirstOrDefault(m => m.Email == model.Email && m.password == model.Password && m.status == "1");
+                if (account != null)
                 {
-                    UserId = account.account_id,
-                    Name = account.Name,
-                    Email = account.Email,
-                    RoleCode = account.Role,
-                    Avatar = account.Avatar
-                };
-                Notification.setNotification1_5s("Đăng nhập thành công", "success");
-                FormsAuthentication.SetAuthCookie(JsonConvert.SerializeObject(userData), false);
-                if (!String.IsNullOrEmpty(returnUrl))
-                    return Redirect(returnUrl);
-                else
-                    return Redirect("/home");
+                    LoggedUserData userData = new LoggedUserData
+                    {
+                        UserId = account.account_id,
+                        Name = account.Name,
+                        Email = account.Email,
+                        RoleCode = account.Role,
+                        Avatar = account.Avatar
+                    };
+                    Notification.setNotification1_5s("Đăng nhập thành công", "success");
+                    FormsAuthentication.SetAuthCookie(JsonConvert.SerializeObject(userData), false);
+                    if (!String.IsNullOrEmpty(returnUrl))
+                        return Redirect("/home");
+                    else
+                        return Redirect("/home");
+                }
+                Notification.setNotification3s("Email, mật khẩu không đúng, hoặc tài khoản bị vô hiệu hóa", "error");
+                return View(model);
             }
-            Notification.setNotification3s("Email, mật khẩu không đúng, hoặc tài khoản bị vô hiệu hóa", "error");
-            return View(model);
+            else
+            {
+                Notification.setNotification3s("Mã captcha không hợp lệ", "error");
+                return View(model);
+            }
         }
         //Đăng xuất tài khoản
         public ActionResult Logout(string returnUrl)
@@ -99,7 +108,7 @@ namespace DoAn_LapTrinhWeb.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return Redirect("/home");
             }
             return View();
         }
@@ -575,6 +584,33 @@ namespace DoAn_LapTrinhWeb.Controllers
         {
             // Được gọi khi nhấn [Thanh toán]
             return Json(User.Identity.IsAuthenticated, JsonRequestBehavior.AllowGet);
+        }
+        private bool IsValidRecaptcha(string recaptcha)
+        {
+            if (string.IsNullOrEmpty(recaptcha))
+            {
+                return false;
+            }
+            var secretKey = "6Lfqk5AeAAAAABsccTQseXIKG8yvgZYzF32Z8d8z";//Mã bí mật
+            string remoteIp = Request.ServerVariables["REMOTE_ADDR"];
+            string myParameters = String.Format("secret={0}&response={1}&remoteip={2}", secretKey, recaptcha, remoteIp);
+            RecaptchaResult captchaResult;
+            using (var wc = new WebClient())
+            {
+                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                var json = wc.UploadString("https://www.google.com/recaptcha/api/siteverify", myParameters);
+                var js = new DataContractJsonSerializer(typeof(RecaptchaResult));
+                var ms = new MemoryStream(Encoding.ASCII.GetBytes(json));
+                captchaResult = js.ReadObject(ms) as RecaptchaResult;
+                if (captchaResult != null && captchaResult.Success)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
     }
 }
