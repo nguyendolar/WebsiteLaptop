@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "VerifyAccount";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+}
+
+<!-- ...:::: Start Breadcrumb Section:::... -->
+<div class="breadcrumb-section breadcrumb-bg-color--black">
+    <div class="breadcrumb-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden">
+                        <nav aria-label="breadcrumb">
+                            <ul>
+                                <li><a href="@Url.Action("Index","Home")">Trang Chủ</a></li>
+                                <li class="active" aria-current="page">
+                                    Xác thực tài khoản
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ...:::: End Breadcrumb Section:::... -->
+<!-- ...:::: Start Customer Login Section :::... -->
+<div class="customer-login">
+    <div class="container">
+        <div class="row d-xl-flex justify-content-center">
+            <!--login area start-->
+            <div class="col-lg-4 col-md-4">
+                <div class="account_form" data-aos="fade-up" data-aos-delay="0">
+                    <h3 class="text-center">Xác thực tài khoản</h3>
+
+                        <form action="/Account/VerifyAccount" method="POST">
+                            <label class="mb-1">Mã OTP <span class="text-danger">*</span></label>
+                            <div class="default-form-box">
+                                <input class = "text-danger" name="otp" type="text" />
+                            </div>                                               
+                            <div class="login_submit">
+                                <button class="btn btn-md btn-black-default-hover mb-4 w-100" style="height:45px;" type="submit">Xác thực</button>
+                            </div>
+                          
+                        </form>
+                    
+                </div>
+            </div>
+            <!--login area start-->
+        </div>
+    </div>
+</div> <!-- ...:::: End Customer Login Section :::... -->
+@section scripts{
+    <script src="~/Scripts/UserJS/jquery.validate.min.js"></script>
+    <script src="~/Scripts/UserJS/jquery.validate.unobtrusive.js"></script>
+}
+

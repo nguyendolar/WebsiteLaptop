@@ -184,6 +184,10 @@
     <Compile Include="Migrations\202203281623021_new.Designer.cs">
       <DependentUpon>202203281623021_new.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202204051811023_new1.cs" />
+    <Compile Include="Migrations\202204051811023_new1.Designer.cs">
+      <DependentUpon>202204051811023_new1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Account\AccountViewModels.cs" />
@@ -2372,6 +2376,7 @@
     <Content Include="Views\Cart\PreviewCart.cshtml" />
     <Content Include="Views\Account\Address.cshtml" />
     <Content Include="Views\Account\Home.cshtml" />
+    <Content Include="Views\Account\VerifyAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2398,15 +2403,12 @@
     <EmbeddedResource Include="Migrations\202203281623021_new.resx">
       <DependentUpon>202203281623021_new.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204051811023_new1.resx">
+      <DependentUpon>202204051811023_new1.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MoMo\MoMo.csproj">
-      <Project>{b0728ffa-853c-404a-9c2d-a79bd9e625d7}</Project>
-      <Name>MoMo</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

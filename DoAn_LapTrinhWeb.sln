@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoAn_LapTrinhWeb", "DoAn_LapTrinhWeb\DoAn_LapTrinhWeb.csproj", "{834F5E83-5175-4EE7-A8C3-AA47694C16EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoMo", "MoMo\MoMo.csproj", "{B0728FFA-853C-404A-9C2D-A79BD9E625D7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{834F5E83-5175-4EE7-A8C3-AA47694C16EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{834F5E83-5175-4EE7-A8C3-AA47694C16EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{834F5E83-5175-4EE7-A8C3-AA47694C16EC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0728FFA-853C-404A-9C2D-A79BD9E625D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0728FFA-853C-404A-9C2D-A79BD9E625D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0728FFA-853C-404A-9C2D-A79BD9E625D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0728FFA-853C-404A-9C2D-A79BD9E625D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,22 +2,20 @@
 using DoAn_LapTrinhWeb.Common.Helpers;
 using DoAn_LapTrinhWeb.Model;
 using DoAn_LapTrinhWeb.Models;
-using MoMo.MoMoSecurity;
-using MoMo.PaymentRequest;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Net.Mail;
 using System.Runtime.Serialization.Json;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Hosting;
@@ -62,26 +60,35 @@ namespace DoAn_LapTrinhWeb.Controllers
             model.Password = Crypto.Hash(model.Password);
             if (IsValidRecaptcha(Request["g-recaptcha-response"]))
             {
-                Account account = db.Accounts.FirstOrDefault(m => m.Email == model.Email && m.password == model.Password && m.status == "1");
-                if (account != null)
+                Account account = db.Accounts.FirstOrDefault(m => m.Email == model.Email && m.password == model.Password);
+                if (account.status.Equals("0"))
                 {
-                    LoggedUserData userData = new LoggedUserData
-                    {
-                        UserId = account.account_id,
-                        Name = account.Name,
-                        Email = account.Email,
-                        RoleCode = account.Role,
-                        Avatar = account.Avatar
-                    };
-                    Notification.setNotification1_5s("Đăng nhập thành công", "success");
-                    FormsAuthentication.SetAuthCookie(JsonConvert.SerializeObject(userData), false);
-                    if (!String.IsNullOrEmpty(returnUrl))
-                        return Redirect("/home");
-                    else
-                        return Redirect("/home");
+                    Notification.setNotification3s("Tài khoản chưa được xác thực vui lòng vào mail để lấy OTP", "error");
+                    return View(model);
                 }
-                Notification.setNotification3s("Email, mật khẩu không đúng, hoặc tài khoản bị vô hiệu hóa", "error");
-                return View(model);
+                else
+                {
+                    if (account != null)
+                    {
+                        LoggedUserData userData = new LoggedUserData
+                        {
+                            UserId = account.account_id,
+                            Name = account.Name,
+                            Email = account.Email,
+                            RoleCode = account.Role,
+                            Avatar = account.Avatar
+                        };
+                        Notification.setNotification1_5s("Đăng nhập thành công", "success");
+                        FormsAuthentication.SetAuthCookie(JsonConvert.SerializeObject(userData), false);
+                        if (!String.IsNullOrEmpty(returnUrl))
+                            return Redirect("/home");
+                        else
+                            return Redirect("/home");
+                    }
+                    Notification.setNotification3s("Email, mật khẩu không đúng, hoặc tài khoản bị vô hiệu hóa", "error");
+                    return View(model);
+                }
+               
             }
             else
             {
@@ -125,13 +132,15 @@ namespace DoAn_LapTrinhWeb.Controllers
                 fail = "email đã được sử dụng";
                 return View();
             }
+            string code = GenerateRandomNo().ToString();
             account.Role = Const.ROLE_MEMBER_CODE; //admin quyền là 0: thành viên quyền là 1             
-            account.status = "1";
+            account.status = "0";
             account.Role = 1;
             account.Email = model.Email;
             account.create_by = model.Email;
             account.update_by = model.Email;
             account.Name = model.Name;
+            account.otp = code;
             account.Phone = model.PhoneNumber;
             account.update_at = DateTime.Now;
             account.Avatar = "/Content/Images/logo/icon.png";
@@ -140,11 +149,42 @@ namespace DoAn_LapTrinhWeb.Controllers
             account.create_at = DateTime.Now; //thời gian tạo tạo khoản
             db.Accounts.Add(account);
             db.SaveChanges(); //add dữ liệu vào database
-            success = "<script>alert('Đăng ký thành công');</script>";
+            success = "<script>alert('Đăng ký thành công,vui lòng vào mail để lấy OTP xác thực');</script>";
+            Session.Add("UserRegister", account);
+            SendVerificationLinkEmailRegister(model.Email, code);
+            Notification.setNotification1_5s("Đăng ký thành công,vui lòng vào mail để lấy OTP xác thực", "success");
             ViewBag.Success = success;
             ViewBag.Fail = fail;
-            return RedirectToAction("Login","Account");
+            return RedirectToAction("VerifyAccount", "Account");
         }
+
+        [HttpGet]
+        public ActionResult VerifyAccount()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult VerifyAccount(FormCollection form)
+        {
+            string otp = form["otp"];
+            var user = (Account)Session["UserRegister"];
+            var obj = db.Accounts.FirstOrDefault(x => x.account_id == user.account_id);
+            if (otp.Equals(obj.otp))
+            {             
+                obj.status = "1";
+                db.Configuration.ValidateOnSaveEnabled = false; // tắt validdation
+                db.SaveChanges();               
+                Notification.setNotification1_5s("Xác thực tài khoản thành công", "success");
+                Session.Remove("UserRegister");
+                return RedirectToAction("Login", "Account");
+            } else
+            {
+                Notification.setNotification1_5s("Xác thực thất bại,mã otp không đúng vui lòng kiểm tra", "error");
+                return RedirectToAction("VerifyAccount", "Account");
+            }           
+        }
+
         //View quên mật khẩu
         public ActionResult ForgotPassword()
         {
@@ -228,6 +268,38 @@ namespace DoAn_LapTrinhWeb.Controllers
             var smtp = new SmtpClient
             {
                 Host = EmailConfig.emailHost, 
+                Port = 587,
+                EnableSsl = true, //bật ssl
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromEmail.Address, fromEmailPassword)
+            };
+
+            using (var message = new MailMessage(fromEmail, toEmail)
+            {
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            })
+                smtp.Send(message);
+        }
+
+        //Gửi Email quên mật khẩu
+        [NonAction]
+        public void SendVerificationLinkEmailRegister(string emailID, string activationCode)
+        {
+            var verifyUrl = "/Account/ResetPassword/" + activationCode;
+            var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, verifyUrl);
+            var fromEmail = new MailAddress(EmailConfig.emailID, EmailConfig.emailName);
+            var toEmail = new MailAddress(emailID);
+            var fromEmailPassword = EmailConfig.emailPassword; //có thể thay bằng mật khẩu gmail của bạn
+            string body = "Mã OTP:" + activationCode;
+            string subject = "Xác thực tài khoản";
+            body = body.Replace("{{viewBag.Confirmlink}}", link); //hiển thị nội dung lên form html
+            body = body.Replace("{{viewBag.Confirmlink}}", Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, verifyUrl));//hiển thị nội dung lên form html
+            var smtp = new SmtpClient
+            {
+                Host = EmailConfig.emailHost,
                 Port = 587,
                 EnableSsl = true, //bật ssl
                 DeliveryMethod = SmtpDeliveryMethod.Network,
@@ -513,9 +585,8 @@ namespace DoAn_LapTrinhWeb.Controllers
                 notifyurl + "&extraData=" +
                 extraData;
 
-            MoMoSecurity crypto = new MoMoSecurity();
             //sign signature SHA256
-            string signature = crypto.signSHA256(rawHash, serectkey);
+            string signature = signSHA256(rawHash, serectkey);
 
             //build body json request
             JObject message = new JObject
@@ -534,7 +605,7 @@ namespace DoAn_LapTrinhWeb.Controllers
 
             };
 
-            string responseFromMomo = PaymentRequest.sendPaymentRequest(endpoint, message.ToString());
+            string responseFromMomo = sendPaymentRequest(endpoint, message.ToString());
             Session.Add("idPayment", obj);
             JObject jmessage = JObject.Parse(responseFromMomo);
             obj.IsPayment = true;
@@ -611,6 +682,172 @@ namespace DoAn_LapTrinhWeb.Controllers
                     return false;
                 }
             }
+        }
+        public string getHash(string partnerCode, string merchantRefId,
+           string amount, string paymentCode, string storeId, string storeName, string publicKeyXML)
+        {
+            string json = "{\"partnerCode\":\"" +
+                partnerCode + "\",\"partnerRefId\":\"" +
+                merchantRefId + "\",\"amount\":" +
+                amount + ",\"paymentCode\":\"" +
+                paymentCode + "\",\"storeId\":\"" +
+                storeId + "\",\"storeName\":\"" +
+                storeName + "\"}";
+
+            byte[] data = Encoding.UTF8.GetBytes(json);
+            string result = null;
+            using (var rsa = new RSACryptoServiceProvider(4096)) //KeySize
+            {
+                try
+                {
+                    // MoMo's public key has format PEM.
+                    // You must convert it to XML format. Recommend tool: https://superdry.apphb.com/tools/online-rsa-key-converter
+                    rsa.FromXmlString(publicKeyXML);
+                    var encryptedData = rsa.Encrypt(data, false);
+                    var base64Encrypted = Convert.ToBase64String(encryptedData);
+                    result = base64Encrypted;
+                }
+                finally
+                {
+                    rsa.PersistKeyInCsp = false;
+                }
+
+            }
+
+            return result;
+
+        }
+        public string buildQueryHash(string partnerCode, string merchantRefId,
+            string requestid, string publicKey)
+        {
+            string json = "{\"partnerCode\":\"" +
+                partnerCode + "\",\"partnerRefId\":\"" +
+                merchantRefId + "\",\"requestId\":\"" +
+                requestid + "\"}";
+
+            byte[] data = Encoding.UTF8.GetBytes(json);
+            string result = null;
+            using (var rsa = new RSACryptoServiceProvider(2048))
+            {
+                try
+                {
+                    // client encrypting data with public key issued by server
+                    rsa.FromXmlString(publicKey);
+                    var encryptedData = rsa.Encrypt(data, false);
+                    var base64Encrypted = Convert.ToBase64String(encryptedData);
+                    result = base64Encrypted;
+                }
+                finally
+                {
+                    rsa.PersistKeyInCsp = false;
+                }
+
+            }
+
+            return result;
+
+        }
+
+        public string buildRefundHash(string partnerCode, string merchantRefId,
+            string momoTranId, long amount, string description, string publicKey)
+        {
+            string json = "{\"partnerCode\":\"" +
+                partnerCode + "\",\"partnerRefId\":\"" +
+                merchantRefId + "\",\"momoTransId\":\"" +
+                momoTranId + "\",\"amount\":" +
+                amount + ",\"description\":\"" +
+                description + "\"}";
+
+            byte[] data = Encoding.UTF8.GetBytes(json);
+            string result = null;
+            using (var rsa = new RSACryptoServiceProvider(2048))
+            {
+                try
+                {
+                    // client encrypting data with public key issued by server
+                    rsa.FromXmlString(publicKey);
+                    var encryptedData = rsa.Encrypt(data, false);
+                    var base64Encrypted = Convert.ToBase64String(encryptedData);
+                    result = base64Encrypted;
+                }
+                finally
+                {
+                    rsa.PersistKeyInCsp = false;
+                }
+
+            }
+
+            return result;
+
+        }
+        public string signSHA256(string message, string key)
+        {
+            byte[] keyByte = Encoding.UTF8.GetBytes(key);
+            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+            using (var hmacsha256 = new HMACSHA256(keyByte))
+            {
+                byte[] hashmessage = hmacsha256.ComputeHash(messageBytes);
+                string hex = BitConverter.ToString(hashmessage);
+                hex = hex.Replace("-", "").ToLower();
+                return hex;
+
+            }
+        }
+
+        public static string sendPaymentRequest(string endpoint, string postJsonString)
+        {
+
+            try
+            {
+                HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(endpoint);
+
+                var postData = postJsonString;
+
+                var data = Encoding.UTF8.GetBytes(postData);
+
+                httpWReq.ProtocolVersion = HttpVersion.Version11;
+                httpWReq.Method = "POST";
+                httpWReq.ContentType = "application/json";
+
+                httpWReq.ContentLength = data.Length;
+                httpWReq.ReadWriteTimeout = 30000;
+                httpWReq.Timeout = 15000;
+                Stream stream = httpWReq.GetRequestStream();
+                stream.Write(data, 0, data.Length);
+                stream.Close();
+
+                HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
+
+                string jsonresponse = "";
+
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+
+                    string temp = null;
+                    while ((temp = reader.ReadLine()) != null)
+                    {
+                        jsonresponse += temp;
+                    }
+                }
+
+
+                //todo parse it
+                return jsonresponse;
+                //return new MomoResponse(mtid, jsonresponse);
+
+            }
+            catch (WebException e)
+            {
+                return e.Message;
+            }
+
+        }
+        private  int GenerateRandomNo()
+        {
+            int _min = 1000;
+            int _max = 9999;
+            Random _rdm = new Random();
+            return _rdm.Next(_min, _max);
         }
     }
 }

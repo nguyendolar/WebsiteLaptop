@@ -45,6 +45,8 @@ namespace DoAn_LapTrinhWeb.Models
         public DateTime create_at { get; set; }
         [StringLength(100)]
         public string update_by { get; set; }
+
+        public string otp { get; set; }
         public DateTime update_at { get; set; }
         [StringLength(1)] public string status { get; set; }
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
