@@ -61,32 +61,33 @@ namespace DoAn_LapTrinhWeb.Controllers
             if (IsValidRecaptcha(Request["g-recaptcha-response"]))
             {
                 Account account = db.Accounts.FirstOrDefault(m => m.Email == model.Email && m.password == model.Password);
-                if (account.status.Equals("0"))
+                if (account == null)
                 {
-                    Notification.setNotification3s("Tài khoản chưa được xác thực vui lòng vào mail để lấy OTP", "error");
+                    
+                    Notification.setNotification3s("Email, mật khẩu không đúng, hoặc tài khoản bị vô hiệu hóa", "error");
                     return View(model);
                 }
                 else
                 {
-                    if (account != null)
+                    if (account.status.Equals("0"))
                     {
-                        LoggedUserData userData = new LoggedUserData
-                        {
-                            UserId = account.account_id,
-                            Name = account.Name,
-                            Email = account.Email,
-                            RoleCode = account.Role,
-                            Avatar = account.Avatar
-                        };
-                        Notification.setNotification1_5s("Đăng nhập thành công", "success");
-                        FormsAuthentication.SetAuthCookie(JsonConvert.SerializeObject(userData), false);
-                        if (!String.IsNullOrEmpty(returnUrl))
-                            return Redirect("/home");
-                        else
-                            return Redirect("/home");
+                        Notification.setNotification3s("Tài khoản chưa được xác thực vui lòng vào mail để lấy OTP", "error");
+                        return View(model);
                     }
-                    Notification.setNotification3s("Email, mật khẩu không đúng, hoặc tài khoản bị vô hiệu hóa", "error");
-                    return View(model);
+                    LoggedUserData userData = new LoggedUserData
+                    {
+                        UserId = account.account_id,
+                        Name = account.Name,
+                        Email = account.Email,
+                        RoleCode = account.Role,
+                        Avatar = account.Avatar
+                    };
+                    Notification.setNotification1_5s("Đăng nhập thành công", "success");
+                    FormsAuthentication.SetAuthCookie(JsonConvert.SerializeObject(userData), false);
+                    if (!String.IsNullOrEmpty(returnUrl))
+                        return Redirect("/home");
+                    else
+                        return Redirect("/home");
                 }
                
             }

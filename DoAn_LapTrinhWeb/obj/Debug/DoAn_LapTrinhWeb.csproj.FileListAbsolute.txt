@@ -184,13 +184,9 @@ D:\Project Asp.Net\WebsiteLaptop\DoAn_LapTrinhWeb\bin\MoMo.pdb
 D:\Project Asp.Net\WebsiteLaptop\DoAn_LapTrinhWeb\bin\MoMo.dll.config
 D:\Project Asp.Net\WebsiteLaptop\DoAn_LapTrinhWeb\obj\Debug\DoAn_LapTrinhWeb.Migrations._new.resources
 D:\Project Asp.Net\WebsiteLaptop\DoAn_LapTrinhWeb\bin\System.Net.Http.dll
-D:\.NET MVC\12m\WebsiteLaptop\DoAn_LapTrinhWeb\bin\MoMo.dll
 D:\.NET MVC\12m\WebsiteLaptop\DoAn_LapTrinhWeb\bin\System.Net.Http.dll
-D:\.NET MVC\12m\WebsiteLaptop\DoAn_LapTrinhWeb\bin\MoMo.pdb
-D:\.NET MVC\12m\WebsiteLaptop\DoAn_LapTrinhWeb\bin\MoMo.dll.config
 D:\.NET MVC\12m\WebsiteLaptop\DoAn_LapTrinhWeb\obj\Debug\DoAn_LapTrinhWeb.Migrations.a.resources
 D:\.NET MVC\12m\WebsiteLaptop\DoAn_LapTrinhWeb\obj\Debug\DoAn_LapTrinhWeb.Migrations._new.resources
-D:\.NET MVC\12m\WebsiteLaptop\DoAn_LapTrinhWeb\bin\ASPSnippets.GoogleAPI.dll
 C:\Users\ADMIN\Desktop\WebsiteLaptop\DoAn_LapTrinhWeb\bin\DoAn_LapTrinhWeb.dll.config
 C:\Users\ADMIN\Desktop\WebsiteLaptop\DoAn_LapTrinhWeb\bin\DoAn_LapTrinhWeb.dll
 C:\Users\ADMIN\Desktop\WebsiteLaptop\DoAn_LapTrinhWeb\bin\DoAn_LapTrinhWeb.pdb
@@ -255,3 +251,4 @@ C:\Users\ADMIN\Desktop\WebsiteLaptop\DoAn_LapTrinhWeb\obj\Debug\DoAn_LapTrinhWeb
 C:\Users\ADMIN\Desktop\WebsiteLaptop\DoAn_LapTrinhWeb\obj\Debug\DoAn_LapTrinhWeb.dll
 C:\Users\ADMIN\Desktop\WebsiteLaptop\DoAn_LapTrinhWeb\obj\Debug\DoAn_LapTrinhWeb.pdb
 C:\Users\ADMIN\Desktop\WebsiteLaptop\DoAn_LapTrinhWeb\obj\Debug\DoAn_LapTrinhWeb.Migrations.new1.resources
+D:\.NET MVC\12m\WebsiteLaptop\DoAn_LapTrinhWeb\obj\Debug\DoAn_LapTrinhWeb.Migrations.new1.resources

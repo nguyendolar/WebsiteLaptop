@@ -24,18 +24,17 @@
                                     </li>
                                     <li>
                                         <a href="@Url.Action("Laptop","Products")">
-                                            Laptop 
+                                            Laptop
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("Accessories","Products")">Phụ kiện</a>
                                     </li>
+
                                     <li>
-                                        <a href="#">Khuyến mãi</a>
+                                        <a href="@Url.Action("Discount","Products")">Khuyến mãi</a>
                                     </li>
-                                    <li>
-                                        <a href="#">Tin tức</a>
-                                    </li>
+
                                     @if (User.Identity.IsAuthenticated)
                                     {
                                         if (User.Identity.GetRole() != 1)
@@ -46,8 +45,13 @@
                                         }
                                         else
                                         {
-                                            <li>
-                                                <a href="#">Liên Hệ</a>
+                                            <li class="has-dropdown has-megaitem">
+                                                <a href="#">Liên hệ</a>
+                                                <ul class="sub-menu">
+                                                    <li><a href="tel://1234567920">Telephone</a></li>
+                                                    <li><a href="">Zalo</a></li>
+                                                    <li><a href="">Message</a></li>
+                                                </ul>
                                             </li>
                                         }
                                         <li class="has-dropdown has-megaitem">
@@ -62,9 +66,14 @@
                                     }
                                     else
                                     {
-                                        <li>
-                                            <a href="#">Liên Hệ</a>
-                                        </li>
+                                <li class="has-dropdown has-megaitem">
+                                    <a href="#">Liên hệ</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="tel://1234567920">Telephone</a></li>
+                                        <li><a href="https://zalo.me/">Zalo</a></li>
+                                        <li><a href="">Message</a></li>
+                                    </ul>
+                                </li>
                                         <li class="has-dropdown has-megaitem">
                                             <a href="@Url.Action("Login","Account")">Đăng nhập</a>
                                             <ul class="sub-menu">
@@ -80,9 +89,9 @@
                         <!-- Start Header Action Link -->
                         <ul class="header-action-link action-color--black action-hover-color--golden">
                             <li>
-                                <a href="#offcanvas-add-cart" class="offcanvas-toggle" id="goToCart">
+                                <a href="@Url.Action("ViewCart","Cart")" id="goToCart">
                                     <i class="icon-bag"></i>
-                                   @* <span class="item-count lblCartCount" >0</span>*@
+                                   
                                 </a>
                             </li>
                             <li>

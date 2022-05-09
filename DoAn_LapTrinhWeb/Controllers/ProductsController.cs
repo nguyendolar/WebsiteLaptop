@@ -31,6 +31,13 @@ namespace DoAn_LapTrinhWeb.Controllers
             ViewBag.CountProduct = db.Products.Where(m => m.type ==2).Count();
             return View("Product", GetProduct(m => m.status == "1" && m.type == ProductType.ACCESSORY, page, sortOrder));
         }
+
+        public ActionResult Discount()
+        {
+            ViewBag.List = db.Discounts.Where(d => d.disscount_id != 1).ToList();
+            ViewBag.Type = "Discount" + "?";
+            return View();
+        }
         //xem chi tiết sản phẩm
         public ActionResult ProductDetail(int id, int? page)
         {

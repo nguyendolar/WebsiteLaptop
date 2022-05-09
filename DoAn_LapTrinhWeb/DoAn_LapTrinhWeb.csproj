@@ -2377,6 +2377,7 @@
     <Content Include="Views\Account\Address.cshtml" />
     <Content Include="Views\Account\Home.cshtml" />
     <Content Include="Views\Account\VerifyAccount.cshtml" />
+    <Content Include="Views\Products\Discount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
