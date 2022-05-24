@@ -130,7 +130,7 @@ namespace DoAn_LapTrinhWeb.Controllers
             var checkemail = db.Accounts.Any(m => m.Email == model.Email);
             if (checkemail)
             {
-                fail = "email đã được sử dụng";
+                Notification.setNotification3s("Email đã được sử dụng", "error");
                 return View();
             }
             string code = GenerateRandomNo().ToString();

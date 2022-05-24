@@ -20,6 +20,7 @@ namespace DoAn_LapTrinhWeb.Controllers
         {
             ViewBag.Type = "Laptop";
             ViewBag.SortBy = "laptop" + "?";
+            ViewBag.Category = db.Genres.Where(m => m.genre_name.Contains("Laptop"));
             ViewBag.CountProduct = db.Products.Where(m => m.type == 1).Count();
             return View("Product", GetProduct(m => m.status == "1" && m.type == ProductType.LAPTOP, page, sortOrder));
         }
@@ -28,8 +29,19 @@ namespace DoAn_LapTrinhWeb.Controllers
         {
             ViewBag.SortBy = "accessory";
             ViewBag.Type = "Phụ kiện" + "?";
+            ViewBag.Category = db.Genres.ToList();
             ViewBag.CountProduct = db.Products.Where(m => m.type ==2).Count();
             return View("Product", GetProduct(m => m.status == "1" && m.type == ProductType.ACCESSORY, page, sortOrder));
+        }
+
+        public ActionResult Category(int id)
+        {
+            ViewBag.SortBy = "Danh mục";
+            var cat = db.Genres.Where(m => m.genre_id == id).FirstOrDefault();
+            ViewBag.Type = cat.genre_name;
+            ViewBag.CountProduct = db.Products.Where(m => m.genre_id == id && m.status == "1" && m.quantity != "0").Count();
+            ViewBag.List = db.Products.Where(m => m.genre_id == id).ToList();
+            return View();
         }
 
         public ActionResult Discount()

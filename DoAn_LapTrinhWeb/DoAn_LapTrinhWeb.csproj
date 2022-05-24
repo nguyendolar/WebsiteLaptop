@@ -2380,6 +2380,7 @@
     <Content Include="Views\Account\VerifyAccount.cshtml" />
     <Content Include="Views\Products\Discount.cshtml" />
     <Content Include="Views\Products\Policy.cshtml" />
+    <Content Include="Views\Products\Category.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

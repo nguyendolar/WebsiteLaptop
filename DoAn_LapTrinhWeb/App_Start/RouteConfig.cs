@@ -88,6 +88,12 @@ namespace DoAn_LapTrinhWeb
               url: "order_detail/{id}/{key}",
               defaults: new { controller = "Account", action = "TrackingOrderDetail", id = UrlParameter.Optional }
            );
+
+            routes.MapRoute(
+             name: "Danh mục",
+             url: "category/{id}",
+             defaults: new { controller = "Products", action = "Category", id = UrlParameter.Optional }
+          );
             //quản lý địa chỉ
             routes.MapRoute(
               name: "quan ly dia chi",
