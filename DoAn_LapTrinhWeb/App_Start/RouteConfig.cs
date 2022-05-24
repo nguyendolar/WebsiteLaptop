@@ -85,7 +85,7 @@ namespace DoAn_LapTrinhWeb
             //xem chi tiết đơn hàng
             routes.MapRoute(
               name: "chi tiet don hang",
-              url: "order_detail/{id}",
+              url: "order_detail/{id}/{key}",
               defaults: new { controller = "Account", action = "TrackingOrderDetail", id = UrlParameter.Optional }
            );
             //quản lý địa chỉ

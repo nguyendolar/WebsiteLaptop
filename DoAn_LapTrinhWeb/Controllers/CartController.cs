@@ -11,6 +11,8 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using DoAn_LapTrinhWeb.Common;
+using System.Configuration;
+
 namespace DoAn_LapTrinhWeb.Controllers
 {
     public class CartController : Controller
@@ -196,6 +198,12 @@ namespace DoAn_LapTrinhWeb.Controllers
                 orderDiscount = (priceSum + 30000 - order.total).ToString("#,0₫", culture.NumberFormat);
                 orderPrice = priceSum.ToString("#,0₫", culture.NumberFormat);
                 orderTotal = order.total.ToString("#,0₫", culture.NumberFormat);
+                string a = "https://localhost:44336/order_detail/" + orderID + "/qr";
+                ViewBag.link = a;
+                var link = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" + a;
+                string content = System.IO.File.ReadAllText(Server.MapPath("~/Content/html/sendQRMail.html"));
+                content = content.Replace("{{link}}", link);
+                sendMailQR(User.Identity.GetEmail(), content);
                 //SendVerificationLinkEmail(emailID, orderID, orderItem, orderDiscount, orderPrice, orderTotal, contentWard, district, province); //nếu muốn gửi email đơn hàng thì bật lên
                 Notification.setNotification3s("Đặt hàng thành công", "success");
                 return RedirectToAction("TrackingOrder", "Account");
@@ -206,6 +214,28 @@ namespace DoAn_LapTrinhWeb.Controllers
                 return RedirectToAction("Checkout", "Cart");
             }
         }
+
+        public void sendMailQR(string email, string body)
+        {
+
+            var formEmailAddress = ConfigurationManager.AppSettings["FormEmailAddress"].ToString();
+            var formEmailDisplayName = ConfigurationManager.AppSettings["FormEmailDisplayName"].ToString();
+            var formEmailPassword = ConfigurationManager.AppSettings["FormEmailPassword"].ToString();
+            var smtpHost = ConfigurationManager.AppSettings["SMTPHost"].ToString();
+            var smtpPort = ConfigurationManager.AppSettings["SMTPPost"].ToString();
+            bool enableSsl = bool.Parse(ConfigurationManager.AppSettings["EnabledSSL"].ToString());
+            MailMessage message = new MailMessage(new MailAddress(formEmailAddress, formEmailDisplayName), new MailAddress(email));
+            message.Subject = "QR về hóa đơn của quý khách";
+            message.IsBodyHtml = true;
+            message.Body = body;
+            var client = new SmtpClient();
+            client.Credentials = new NetworkCredential(formEmailAddress, formEmailPassword);
+            client.Host = smtpHost;
+            client.EnableSsl = enableSsl;
+            client.Port = !string.IsNullOrEmpty(smtpPort) ? Convert.ToInt32(smtpPort) : 0;
+            client.Send(message);
+        }
+
         //Gửi email đơn hàng
         [NonAction]
         public void SendVerificationLinkEmail(string emailID, string orderID, string orderItem, string orderDiscount, string orderPrice, string orderTotal, string contentWard, string district, string province)

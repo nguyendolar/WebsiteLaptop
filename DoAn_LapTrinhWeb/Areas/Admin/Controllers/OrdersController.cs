@@ -77,6 +77,10 @@ namespace DoAn_LapTrinhWeb.Areas.Admin.Controllers
                 {
                     result = "success";
                     order.status = status;
+                    if(status == "3" && !order.IsPayment)
+                    {
+                        order.IsPayment = true;
+                    }
                     order.update_at = DateTime.Now;
                     order.update_by = User.Identity.GetEmail();
                     db.Entry(order).State = EntityState.Modified;

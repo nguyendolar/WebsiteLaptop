@@ -191,24 +191,34 @@
                                                                         <span>-@((((item.price) / (item.price)) - ((item.price - item.Discount.discount_price) / (item.price))).ToString("0%"))</span>
                                                                     </div>
                                                                 }
-                                                                <div class="action-link">
-                                                                    <div class="action-link-left">
-                                                                        <input step="1" id="quantity" autocomplete="off" hidden value="1" type="number" />
-                                                                        <a class="btnAddToCart" style="cursor:pointer;" data-id="@item.product_id">Thêm vào giỏ</a>
-                                                                    </div>
-                                                                    <div class="action-link-right">
-                                                                        <a href="#" data-bs-toggle="modal"
-                                                                           data-bs-target="#modalQuickview">
-                                                                            <i class="icon-magnifier"></i>
-                                                                        </a>
-                                                                        <a >
-                                                                            <i class="icon-heart"></i>
-                                                                        </a>
-                                                                        <a >
-                                                                            <i class="icon-shuffle"></i>
-                                                                        </a>
-                                                                    </div>
+                                                            <div class="action-link">
+                                                                
+                                                                @if (Int32.Parse(item.quantity) > 0)
+                                                                {
+                                                                <div class="action-link-left">
+                                                                    <input step="1" id="quantity" autocomplete="off" hidden value="1" type="number" />
+                                                                    <a class="btnAddToCart" style="cursor:pointer;" data-id="@item.product_id">Thêm vào giỏ</a>
                                                                 </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="action-link-left">
+                                                                        <a class="" style="cursor:pointer;">Hết hàng</a>
+                                                                    </div>
+                                                                }
+                                                                <div class="action-link-right">
+                                                                    <a href="#" data-bs-toggle="modal"
+                                                                       data-bs-target="#modalQuickview">
+                                                                        <i class="icon-magnifier"></i>
+                                                                    </a>
+                                                                    <a>
+                                                                        <i class="icon-heart"></i>
+                                                                    </a>
+                                                                    <a>
+                                                                        <i class="icon-shuffle"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
                                                             </div>
                                                             <div class="content">
                                                                 <div class="text-center">

@@ -286,6 +286,7 @@
     <Content Include="Content\AdminCSS\plugins.bundle.css" />
     <Content Include="Content\AdminCSS\style.bundle.css" />
     <Content Include="Content\AdminCSS\vis-timeline.bundle.css" />
+    <Content Include="Content\html\sendQRMail.html" />
     <Content Include="Content\Images\about\img-about.jpg" />
     <Content Include="Content\Images\banner-detail.jpg" />
     <Content Include="Content\Images\banner-horizonal-1.jpg" />
@@ -2378,6 +2379,7 @@
     <Content Include="Views\Account\Home.cshtml" />
     <Content Include="Views\Account\VerifyAccount.cshtml" />
     <Content Include="Views\Products\Discount.cshtml" />
+    <Content Include="Views\Products\Policy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

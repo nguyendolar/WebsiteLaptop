@@ -5,6 +5,7 @@
     var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
     var order = (DoAn_LapTrinhWeb.Model.Order)ViewBag.Order;
     double total2 = 0;
+    var css = "col-sm-12 col-md-9 col-lg-9";
 }
 <!-- ...:::: Start Breadcrumb Section:::... -->
 <div class="breadcrumb-section breadcrumb-bg-color--black">
@@ -34,59 +35,67 @@
 <div class="account-dashboard">
     <div class="container">
         <div class="row">
-            @Html.Partial("Dashboard")
-            <div class="col-sm-12 col-md-9 col-lg-9">
-                <!-- Tab panes -->
-                <div class="tab-content dashboard_content" data-aos="fade-up" data-aos-delay="0">
-                    <div class="table_desc">
-                        <div class="table_page table-responsive" >
-                            <table>
-                                <!-- Start Cart Table Head -->
-                                <thead>
-                                    <tr>
-                                        <th class="product_name">Sản phẩm</th>
-                                        <th class="product_thumb">Ảnh</th>
-                                        <th class="product-price">Giá</th>
-                                        <th class="product_quantity">Số Lượng</th>
-                                        <th class="product_total">Thành tiền</th>
-                                    </tr>
-                                </thead> <!-- End Cart Table Head -->
-                                <tbody>
-                                    <!-- Start Cart Single Item-->
-                                    @foreach (var item in Model)
-                                    {
-                                        <tr class="item">
-                                            <td class="product_name">
-                                                <a href="~/@SlugGenerator.SlugGenerator.GenerateSlug(item.Product.product_name)-@item.product_id">@item.Product.product_name</a>
-                                            </td>
-                                            <td class="product_thumb">
-                                                <a href="~/@SlugGenerator.SlugGenerator.GenerateSlug(item.Product.product_name)-@item.product_id">
-                                                    <img src="@item.Product.image" alt="@item.product_id">
-                                                </a>
-                                            </td>
-                                            <td class="product-price text-danger">
-                                                @item.price.ToString("#,0₫", culture.NumberFormat)
-                                            </td>
-                                            <td class="product_quantity">
-                                                 @item.quantity
-                                            </td>
-                                            <td class="product_total">
-                                                @{
-                                                    total2 += item.quantity * item.price;
-                                                    double total1= item.quantity * item.price;
-                                                }
-                                                @total1.ToString("#,0₫", culture.NumberFormat)
-                                            </td>
+            @if (ViewBag.Key != "qr")
+            {
+                Html.Partial("Dashboard");
+            }
+            else
+            {
+
+                css = "col-sm-12 col-md-12 col-lg-12";
+            }
+                <div class="@css">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content" data-aos="fade-up" data-aos-delay="0">
+                        <div class="table_desc">
+                            <div class="table_page table-responsive">
+                                <table>
+                                    <!-- Start Cart Table Head -->
+                                    <thead>
+                                        <tr>
+                                            <th class="product_name">Sản phẩm</th>
+                                            <th class="product_thumb">Ảnh</th>
+                                            <th class="product-price">Giá</th>
+                                            <th class="product_quantity">Số Lượng</th>
+                                            <th class="product_total">Thành tiền</th>
                                         </tr>
-                                    }
-                                    <!-- End Cart Single Item-->
-                                </tbody>
-                            </table>
+                                    </thead> <!-- End Cart Table Head -->
+                                    <tbody>
+                                        <!-- Start Cart Single Item-->
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr class="item">
+                                                <td class="product_name">
+                                                    <a href="~/@SlugGenerator.SlugGenerator.GenerateSlug(item.Product.product_name)-@item.product_id">@item.Product.product_name</a>
+                                                </td>
+                                                <td class="product_thumb">
+                                                    <a href="~/@SlugGenerator.SlugGenerator.GenerateSlug(item.Product.product_name)-@item.product_id">
+                                                        <img src="@item.Product.image" alt="@item.product_id">
+                                                    </a>
+                                                </td>
+                                                <td class="product-price text-danger">
+                                                    @item.price.ToString("#,0₫", culture.NumberFormat)
+                                                </td>
+                                                <td class="product_quantity">
+                                                    @item.quantity
+                                                </td>
+                                                <td class="product_total">
+                                                    @{
+                                                        total2 += item.quantity * item.price;
+                                                        double total1 = item.quantity * item.price;
+                                                    }
+                                                    @total1.ToString("#,0₫", culture.NumberFormat)
+                                                </td>
+                                            </tr>
+                                        }
+                                        <!-- End Cart Single Item-->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         <div class="row d-flex justify-content-end">
             <div class="col-lg-4 col-md-4">
                 <div class="coupon_code right" data-aos="fade-up" data-aos-delay="400">

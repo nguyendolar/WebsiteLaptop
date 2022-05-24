@@ -35,6 +35,10 @@
                                         <a href="@Url.Action("Discount","Products")">Khuyến mãi</a>
                                     </li>
 
+                                    <li>
+                                        <a href="@Url.Action("Policy","Products")">Chính sách</a>
+                                    </li>
+
                                     @if (User.Identity.IsAuthenticated)
                                     {
                                         if (User.Identity.GetRole() != 1)
@@ -66,14 +70,14 @@
                                     }
                                     else
                                     {
-                                <li class="has-dropdown has-megaitem">
-                                    <a href="#">Liên hệ</a>
-                                    <ul class="sub-menu">
-                                        <li><a href="tel://1234567920">Telephone</a></li>
-                                        <li><a href="https://zalo.me/">Zalo</a></li>
-                                        <li><a href="">Message</a></li>
-                                    </ul>
-                                </li>
+                                        <li class="has-dropdown has-megaitem">
+                                            <a href="#">Liên hệ</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="tel://1234567920">Telephone</a></li>
+                                                <li><a href="https://zalo.me/">Zalo</a></li>
+                                                <li><a href="">Message</a></li>
+                                            </ul>
+                                        </li>
                                         <li class="has-dropdown has-megaitem">
                                             <a href="@Url.Action("Login","Account")">Đăng nhập</a>
                                             <ul class="sub-menu">

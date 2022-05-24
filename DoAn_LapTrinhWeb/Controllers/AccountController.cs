@@ -566,7 +566,7 @@ namespace DoAn_LapTrinhWeb.Controllers
             string accessKey = "iPXneGmrJH0G8FOP";
             string serectkey = "sFcbSGRSJjwGxwhhcEktCHWYUuTuPNDB";
             string orderInfo = "Thanh toán cho đơn hàng tại web";
-            string returnUrl = "https://localhost:44336/list_order";
+            string returnUrl = "https://localhost:44336/Account/ReturnUrl/" + id;
             string notifyurl = "http://ba1adf48beba.ngrok.io/Home/SavePayment"; //lưu ý: notifyurl không được sử dụng localhost, có thể sử dụng ngrok để public localhost trong quá trình test
 
             string amount = total.ToString();
@@ -609,17 +609,25 @@ namespace DoAn_LapTrinhWeb.Controllers
             string responseFromMomo = sendPaymentRequest(endpoint, message.ToString());
             Session.Add("idPayment", obj);
             JObject jmessage = JObject.Parse(responseFromMomo);
-            obj.IsPayment = true;
-            db.SaveChanges();
+            
             return Redirect(jmessage.GetValue("payUrl").ToString());
         }
 
+        public ActionResult ReturnUrl(int id)
+        {
+            var obj = db.Orders.Where(x => x.order_id == id).FirstOrDefault();
+            obj.IsPayment = true;
+            db.SaveChanges();
+            return Redirect("https://localhost:44336/list_order");
+        }
+
         //Chi tiết đơn hàng đã mua
-        public ActionResult TrackingOrderDetail(int id)
+        public ActionResult TrackingOrderDetail(int id,string key)
         {
             List<Oder_Detail> order = db.Oder_Detail.Where(m => m.order_id == id).ToList();
             ViewBag.Order = db.Orders.FirstOrDefault(m => m.order_id == id);
             ViewBag.OrderID = id;
+            ViewBag.Key = key;
             if (User.Identity.IsAuthenticated)
             {
                 return View(order);

@@ -38,6 +38,12 @@ namespace DoAn_LapTrinhWeb.Controllers
             ViewBag.Type = "Discount" + "?";
             return View();
         }
+
+        public ActionResult Policy()
+        {
+            ViewBag.Type = "Policy" + "?";
+            return View();
+        }
         //xem chi tiết sản phẩm
         public ActionResult ProductDetail(int id, int? page)
         {

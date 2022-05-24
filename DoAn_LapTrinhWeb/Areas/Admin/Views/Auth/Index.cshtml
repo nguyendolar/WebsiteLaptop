@@ -126,15 +126,15 @@
                                             @if (User.Identity.GetUserId() == item.account_id)
                                             {
                                                 <select disabled class="form-select form-select-solid">
-                                                    <option>@(item.Role == 0 ? "Quản trị viên" : "Biên tập viên")</option>
+                                                    <option>@(item.Role == 0 ? "Quản trị viên" : "Nhân viên")</option>
                                                 </select>
                                             }
                                             else
                                             {
                                                 <select id="role-id-@item.account_id" onchange="changerole(@item.account_id)" class="form-select form-select-solid" data-kt-select2="true" data-placeholder="Select option" data-allow-clear="true">
                                                     <option @(item.Role == 0 ? "selected" : "") value="0">Quản trị viên</option>
-                                                     <option @(item.Role == 2 ? "selected" : "") value="2">Biên tập viên</option>
-                                                    <option @(item.Role == 1 ? "selected" : "") value="1">Người dùng</option>
+                                                     <option @(item.Role == 2 ? "selected" : "") value="2">Nhân viên</option>
+                                                    <option @(item.Role == 1 ? "selected" : "") value="1">Khách hàng</option>
                                                 </select>
                                             }
                                         </td>

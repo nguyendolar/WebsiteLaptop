@@ -70,7 +70,7 @@
                                 <span class="fs-4 fw-bold text-gray-400 me-1 align-self-start">₫</span>
                                 <!--end::Currency-->
                                 <!--begin::Amount-->
-                                <span class="fs-2hx fw-bolder text-dark me-2 lh-1">@Order.Where(m => m.oder_date.Month == DateTime.Now.Month && m.oder_date.Year == DateTime.Now.Year).Sum(m => m.total).ToString("#,0", culture.NumberFormat)</span>
+                                <span class="fs-2hx fw-bolder text-dark me-2 lh-1">@Order.Where(m => m.oder_date.Month == DateTime.Now.Month && m.oder_date.Year == DateTime.Now.Year && m.IsPayment).Sum(m => m.total).ToString("#,0", culture.NumberFormat)</span>
                                 <!--end::Amount-->
                                 <!--begin::Badge-->
                                 @if (totalPriceOrderLastMonth < totalPriceOrderThisMonth)
@@ -118,12 +118,12 @@
                             {
                                 foreach (var orderDetail in OrderDetail)
                                 {
-                                    if (orderDetail.order_id == order.order_id && orderDetail.Product.type == 1 && order.oder_date.Month == DateTime.Now.Month && order.oder_date.Year == DateTime.Now.Year)
+                                    if (orderDetail.Order.IsPayment && orderDetail.order_id == order.order_id && orderDetail.Product.type == 1 && order.oder_date.Month == DateTime.Now.Month && order.oder_date.Year == DateTime.Now.Year)
                                     {
                                         total += order.total;
                                     }
 
-                                    if (orderDetail.order_id == order.order_id && orderDetail.Product.type == 2 && order.oder_date.Month == DateTime.Now.Month && order.oder_date.Year == DateTime.Now.Year)
+                                    if (orderDetail.Order.IsPayment && orderDetail.order_id == order.order_id && orderDetail.Product.type == 2 && order.oder_date.Month == DateTime.Now.Month && order.oder_date.Year == DateTime.Now.Year)
                                     {
                                         total2 += order.total;
                                     }
@@ -417,7 +417,7 @@
                                 <span class="fs-4 fw-bold text-gray-400 me-1 align-self-start">₫</span>
                                 <!--end::Currency-->
                                 <!--begin::Amount-->
-                                <span class="fs-2hx fw-bolder text-dark me-2 lh-1">@Order.Where(m => m.oder_date.Day == DateTime.Now.Day && m.oder_date.Month == DateTime.Now.Month && m.oder_date.Year == DateTime.Now.Year).Sum(m => m.total).ToString("#,0", culture.NumberFormat)</span>
+                                <span class="fs-2hx fw-bolder text-dark me-2 lh-1">@Order.Where(m => m.oder_date.Day == DateTime.Now.Day && m.oder_date.Month == DateTime.Now.Month && m.oder_date.Year == DateTime.Now.Year && m.IsPayment).Sum(m => m.total).ToString("#,0", culture.NumberFormat)</span>
                                 <!--end::Amount-->
                                 <!--begin::Badge-->
                                 <span class="badge badge-success fs-6 lh-1 py-1 px-2 d-flex flex-center" style="height: 22px">
