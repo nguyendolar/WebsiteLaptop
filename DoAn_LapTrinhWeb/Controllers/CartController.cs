@@ -190,7 +190,7 @@ namespace DoAn_LapTrinhWeb.Controllers
                 db.Configuration.ValidateOnSaveEnabled = false;
 
                 await db.SaveChangesAsync();
-                Notification.setNotification3s("Đặt hàng thành công", "success");
+                Notification.setNotification3s("Đặt hàng thành công! Vui lòng check Email để nhận mã QR !", "success");
                 Session.Remove("Discount");
                 Session.Remove("Discountcode");
                 emailID = User.Identity.GetEmail();
@@ -205,7 +205,7 @@ namespace DoAn_LapTrinhWeb.Controllers
                 content = content.Replace("{{link}}", link);
                 sendMailQR(User.Identity.GetEmail(), content);
                 //SendVerificationLinkEmail(emailID, orderID, orderItem, orderDiscount, orderPrice, orderTotal, contentWard, district, province); //nếu muốn gửi email đơn hàng thì bật lên
-                Notification.setNotification3s("Đặt hàng thành công", "success");
+                Notification.setNotification3s("Đặt hàng thành công! Vui lòng check Email để nhận mã QR !", "success");
                 return RedirectToAction("TrackingOrder", "Account");
             }
             catch
