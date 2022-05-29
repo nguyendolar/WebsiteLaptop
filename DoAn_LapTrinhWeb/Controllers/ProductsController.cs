@@ -46,7 +46,7 @@ namespace DoAn_LapTrinhWeb.Controllers
 
         public ActionResult Discount()
         {
-            ViewBag.List = db.Discounts.Where(d => d.disscount_id != 1).ToList();
+            ViewBag.List = db.Discounts.Where(d => d.disscount_id != 1 && d.quantity > 0 && d.discount_end.Day >= DateTime.Now.Day && d.discount_end.Month >= DateTime.Now.Month).ToList();
             ViewBag.Type = "Discount" + "?";
             return View();
         }

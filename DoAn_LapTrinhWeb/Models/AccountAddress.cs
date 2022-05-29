@@ -28,9 +28,9 @@ namespace DoAn_LapTrinhWeb.Models
         [StringLength(10)]
         public string accountPhoneNumber { get; set; }
         //số diện
-        [StringLength(20)]
+        [StringLength(200)]
         public string accountUsername { get; set; }
-        [StringLength(50)]
+        [StringLength(500)]
         //địa chỉ cụ thể
         public string content { get; set; }
         //đặt làm đia chỉ mặc định hay không

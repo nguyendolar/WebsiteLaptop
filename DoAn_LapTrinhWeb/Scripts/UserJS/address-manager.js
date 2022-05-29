@@ -83,7 +83,7 @@ var SaveAddress = function () {
         })
         return false;
     }
-    else if (username.length > 20) {
+    else if (username.length > 200) {
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -96,11 +96,11 @@ var SaveAddress = function () {
         })
         Toast.fire({
             icon: 'warning',
-            title: 'Họ tên không quá 20 ký tự'
+            title: 'Họ tên không quá 200 ký tự'
         })
         return false;
     }
-    else if (address.length > 50) {
+    else if (address.length > 500) {
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -113,7 +113,7 @@ var SaveAddress = function () {
         })
         Toast.fire({
             icon: 'warning',
-            title: 'Địa chỉ cụ thể không quá 50 ký tự'
+            title: 'Địa chỉ cụ thể không quá 500 ký tự'
         })
         return false;
     }
